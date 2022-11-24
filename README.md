@@ -121,7 +121,7 @@ The steps involved are outlined below:-
 > ### Install Hardhat
 The first step involves cloning and installing hardhat.
 ```shell
-$ cd Tru-Elect
+# cd Tru-Elect
 
 $ npm i -D hardhat
 
@@ -210,7 +210,7 @@ $ npx hardhat run scripts/deploy.js --network mumbai
 - Setup and install dependencies
 
 ```shell
-$ cd frontend
+# cd frontend
 
 $ npm install
 
