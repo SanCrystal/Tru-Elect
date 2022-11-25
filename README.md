@@ -88,16 +88,16 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 > ## Repo Setup
 
 <p align="justify">
-To setup the repo, first fork the Team-SALD Tru-Elect repo, then clone the forked repository to create a copy on your local machine.
+To setup the repo, first fork the Team-LADS Tru-Elect repo, then clone the forked repository to create a copy on your local machine.
 </p>
 
     $ git clone https://github.com/<your-forked-repo>/Tru-Elect.git
 
 <p align="justify">
-Change directory to the cloned repo and set the Team-SALD Tru-Elect repository as the "upstream" and your forked repository as the "origin" using gitbash.
+Change directory to the cloned repo and set the Team-LADS Tru-Elect repository as the "upstream" and your forked repository as the "origin" using gitbash.
 </p>
 
-    $ git remote add upstream https://github.com/Team-SALD/Tru-Elect.git
+    $ git remote add upstream https://github.com/Team-LADS/Tru-Elect.git
 
 #
 
@@ -217,7 +217,7 @@ $ npm install
 $ npm run dev
 ```
 > ### Steps to host the live site on Vercel
-- Create an account on [vercel](https://vercel.com/) and authorize your [GitHub](https://github.com/Polygon-Team-SALD) account.
+- Create an account on [vercel](https://vercel.com/) and authorize your [GitHub](https://github.com/Polygon-Team-LADS) account.
 
 - Once you're redirected to the Dashboard, click on the drop down menu and select `Add GitHub Org or Account`.
 
@@ -225,7 +225,7 @@ $ npm run dev
 
 - Once installation is completed, return to the dashboard and click `new project`.
 
-- Select the Team-SALD organization and select the TruElect repo to import the project.
+- Select the Team-LADS organization and select the TruElect repo to import the project.
 
 - Enter the relevant details and click `Deploy`.
 
@@ -277,7 +277,7 @@ $ npx hardhat coverage --network localhost --show-stack-traces
 
 > ## Contributors
 
-This Project was created by the members of Team-SALD during the Polygon Internship.
+This Project was created by the members of Team-LADS during the Polygon Internship.
 
 ``` 
 - KordJs (Ajibadeabd@gmail.com)
@@ -287,7 +287,7 @@ This Project was created by the members of Team-SALD during the Polygon Internsh
 ```
 
 <!-- <p align="center" width="100%">
-  <img src="https://drive.google.com/uc?export=view&id=17igBfE_fikN2_NGJ0am0IaK8V1IW3Q-8" alt="Team-SALD"/>
+  <img src="https://drive.google.com/uc?export=view&id=17igBfE_fikN2_NGJ0am0IaK8V1IW3Q-8" alt="Team-LADS"/>
 </p> -->
 
 #
@@ -304,4 +304,4 @@ Before adding a pull request, please note:
 
 All **`suggestions`** are welcome!
 #
-> ##### README Created by `pauline-banye` for Team-SALD
+> ##### README Created by `pauline-banye` for Team-LADS
