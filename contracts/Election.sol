@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 /** 
 * @dev FLOW PROCESS
-* @dev -1- Upload address of stakeholders
+* @dev -1- Upload address of voters
 * @dev -2- Add category
 * @dev -3- Register candidates
 * @dev -4- Setup election
@@ -13,6 +13,11 @@ pragma solidity ^0.8.10;
 * @dev -8- Compile votes
 * @dev -9- Make results public
 */ 
+
+/**
+- validate candidate
+ */
+
 
 /**
 * @author Team-SALD - Polygon Internship 22
@@ -39,14 +44,13 @@ contract TruElect {
         /** @notice add chairman is the deployer of the contract */
         chairman = msg.sender;
         
-        /** @notice add chairman as a stakeholder */
-        stakeholders[msg.sender] = Stakeholder("chairman", true, false, 0, 4 );
+        /** @notice add chairman as a voter */
+        voters[msg.sender] = Voter("chairman", true, false, 0, 4 );
     }
 
-
     /// ---------------------------------------- STRUCT ------------------------------------------ ///
-    /** @notice structure for stakeholders */
-    struct Stakeholder {
+    /** @notice structure for voters */
+    struct Voter {
         string role;
         bool isRegistered;
         bool hasVoted;  
@@ -56,7 +60,7 @@ contract TruElect {
 
     /** @notice structure for candidates */
     struct Candidate {
-        uint256   id;
+        uint256 id;
         string name;   
         uint256 category;
         uint voteCount; 
@@ -73,7 +77,6 @@ contract TruElect {
         uint256 totalVotesCasted;
         string[] allowedVoters;
     }
-
 
     /// ---------------------------------------- VARIABLES ------------------------------------- ///
     /** @notice state variable for tokens */
@@ -107,8 +110,8 @@ contract TruElect {
     uint256 electorsCount;
     
     /// ------------------------------------- MAPPING ------------------------------------------ ///
-    /** @notice mapping for list of stakeholders addresses */
-    mapping(address => Stakeholder) public stakeholders;
+    /** @notice mapping for list of voters addresses */
+    mapping(address => Voter) public voters;
 
     /** @notice array for candidates */
     mapping(uint => Candidate) public candidates;
@@ -139,36 +142,28 @@ contract TruElect {
   
 
     /// ------------------------------------- MODIFIER ------------------------------------------- ///
-    /** @notice modifier to check that only the registered stakeholders can call a function */
-    modifier onlyRegisteredStakeholder() {
+    /** @notice modifier to check that only the registered voters can call a function */
+    modifier onlyRegisteredVoter() {
 
-        /** @notice check that the sender is a registered stakeholder */
-        require(stakeholders[msg.sender].isRegistered, 
-           "You must be a registered stakeholder");
+        /** @notice check that the sender is a registered voter */
+        
+        require(voters[msg.sender].isRegistered, 
+           "You must be a registered voter");
        _;
     }
 
     /** @notice modifier to check that only the electors can call a function */
     modifier onlyElector() {
-        require(compareStrings(stakeholders[msg.sender].role, "electors"),"Only Electors have access");
+        require(compareStrings(voters[msg.sender].role, "electors"),"Only Electors have access");
         _;
     }
     
-    /** @notice modifier to check that only the chairman or teacher can call a function */
-    modifier onlyAccess() {
-
-        /** @notice check that sender is the chairman */
-        require(msg.sender == chairman || compareStrings(stakeholders[msg.sender].role,"teacher"), 
-        "Access granted to only the chairman or teacher");
-        _;
-    }
-
-    /// @notice modifier to check that only the chairman, teacher or electors can call a function
+    /// @notice modifier to check that only the chairman or electors can call a function
     modifier onlyGranted() {
 
         /// @notice check that sender is the chairman
-        require ((msg.sender == chairman) || compareStrings(stakeholders[msg.sender].role,"teacher") || compareStrings(stakeholders[msg.sender].role,"electors"), 
-        "Access granted to only the chairman, teacher or electors");
+        require ((msg.sender == chairman) || compareStrings(voters[msg.sender].role,"electors"), 
+        "Access granted to only the chairman or electors");
         _;
     }
  
@@ -198,9 +193,9 @@ contract TruElect {
 
 
     /// ---------------------------------------- EVENTS ----------------------------------------- ///
-    /** @notice emit when a stakeholder is registered */
-    event StakeholderRegisteredEvent (
-            string _role,address[] stakeholderAddress
+    /** @notice emit when a voter is registered */
+    event VoterRegisteredEvent (
+            string _role,address[] voterAddress
     ); 
 
     /// @notice emit when role is appointed
@@ -217,9 +212,9 @@ contract TruElect {
     /** @notice emit when voting process has ended */
     event VotingEndedEvent (string category,bool status);
     
-    /** @notice emit when stakeholder has voted */
+    /** @notice emit when voter has voted */
     event VotedEvent (
-        address stakeholder,
+        address voter,
         string category
     );
     
@@ -237,12 +232,12 @@ contract TruElect {
     }
 
     /** 
-    * @notice check if address is a teacher 
+    * @notice check the role of a specific address 
     * @dev funtion cannot be called if contract is paused
     */
     function checkRole(string memory _role,address _address) onlyWhenNotPaused public view 
         returns (bool) {
-        return compareStrings( _role,stakeholders[_address].role);
+        return compareStrings( _role,voters[_address].role);
     }     
     
     /** 
@@ -264,64 +259,59 @@ contract TruElect {
     * @dev function cannot be called when contract is paused
     */
     function changeChairman(address _stakeHolder) onlyElector onlyWhenNotPaused public{
-        require(stakeholders[_stakeHolder].isRegistered ==true,"Can't assign a role of chairman to a non stakeholder.");
+        require(voters[_stakeHolder].isRegistered ==true,"Can't assign a role of chairman to a non voter.");
         uint256 consensusCheckpoint = 75*electorsCount;
         require(consensus.length*100 > consensusCheckpoint,"Requires Greater than 75% consent of electors to approve!");
         
         /** @notice change chairman role */
-        stakeholders[_stakeHolder].role = "chairman";
-        stakeholders[chairman].role = "electors";
-        stakeholders[chairman].votingPower= 3;
-        stakeholders[_stakeHolder].votingPower= 4;
+        voters[_stakeHolder].role = "chairman";
+        voters[chairman].role = "electors";
+        voters[chairman].votingPower= 3;
+        voters[_stakeHolder].votingPower= 4;
         chairman = _stakeHolder;
+
         address[] memory _consensus = consensus;
         for(uint256 i;i<_consensus.length;i++){
             hasConsented[_consensus[i]]=false;
         }
-        
         delete consensus;
-
         /** @notice emit event of new chairman */
         emit ChangeChairman(msg.sender, _stakeHolder);
     } 
 
     /**
-    * @notice upload csv file of stakeholders
-    * @dev only chairman and teacher can upload csv file of stakeholders
+    * @notice upload csv file of voters
+    * @dev only chairman and elector can upload csv file of voters
     * @dev function cannot be called if contract is paused
     */
-    function uploadStakeHolder(string memory _role,uint256 votingPower,address[] calldata _address) onlyAccess onlyWhenNotPaused  external {
-        
+    function uploadStakeHolder(string memory _role,uint256 votingPower,address[] calldata _address) onlyGranted onlyWhenNotPaused  external {
         /// @notice loop through the list of voters and upload
         require(
             _address.length >0,
             "Upload array of addresses"
         );
-        
+    
         for (uint i = 0; i < _address.length; i++) {
-                 if(stakeholders[_address[i]].isRegistered ==false)
-                {stakeholders[_address[i]] = Stakeholder(_role, true, false, 0, votingPower ); } 
+                 if(voters[_address[i]].isRegistered ==false)
+                {voters[_address[i]] = Voter(_role, true, false, 0, votingPower ); } 
                 if(compareStrings(_role, "electors")){electorsCount+=1;}   
-        }
-        
-        /// @notice emit stakeholder registered event
-        emit StakeholderRegisteredEvent(_role, _address);
+        }    
+        /// @notice emit voter registered event
+        emit VoterRegisteredEvent(_role, _address);
     }
     
     /** 
     * @notice register candidate for election
-    * @dev only chairman and teacher can register candidates for election
+    * @dev only chairman and elector can register candidates for election
     * @dev function cannot be called if contract is paused
     */
     function registerCandidate(string memory candidateName, string memory _category) 
-        public onlyAccess onlyWhenNotPaused {
-
+        public onlyGranted onlyWhenNotPaused {
         /** @notice check if the position already exists */
         require(Category[_category] != 0,"Category does not exist...");
         
         /** @dev initial state check */
             candidatesCount++;
-        
         /** @notice add to candidate map by passing in the candidateCount aka id */
         candidates[candidatesCount] = Candidate(candidatesCount, candidateName, Category[_category], 0 );
         
@@ -332,11 +322,11 @@ contract TruElect {
 
     /** 
     * @notice add categories of offices for election
-    * @dev only chairman and teacher can add categories for election
+    * @dev only chairman and elector can add categories for election
     * @dev function cannot be called if contract is paused
     */
-    function addCategories(string memory _category) onlyAccess onlyWhenNotPaused public returns(string memory ){
-        
+    function addCategories(string memory _category) onlyGranted onlyWhenNotPaused public returns(string memory ){
+
         /** @notice add to the categories array */
         categories.push(_category);
         
@@ -362,10 +352,10 @@ contract TruElect {
     /**
     * @notice setup election
     * @dev takes in category and an array of candidates
-    * @dev only chairman and teacher can setup election
+    * @dev only chairman and elector can setup election
     * @dev function cannot be called if contract is paused
     */
-    function setUpElection (string memory _category,uint256[] memory _candidateID,string[] memory _allowedVoters) public onlyAccess onlyWhenNotPaused returns(bool){
+    function setUpElection (string memory _category,uint256[] memory _candidateID,string[] memory _allowedVoters) public onlyGranted onlyWhenNotPaused returns(bool){
     
     uint index = activeElectionArrays.length;
     activeModify[_category] =index;
@@ -439,14 +429,14 @@ contract TruElect {
 
     /** 
     * @notice function for voting process
-    * @dev only registered stakeholders can vote
+    * @dev only registered voters can vote
     * @dev function cannot be called if contract is paused
     * @return category and candidate voted for
     */
-    function vote(string memory _category, uint256 _candidateID) public onlyRegisteredStakeholder onlyWhenNotPaused returns (string memory, uint256) {
+    function vote(string memory _category, uint256 _candidateID) public onlyRegisteredVoter onlyWhenNotPaused returns (string memory, uint256) {
         
-        /** @notice check that the voter/stakeholder is qualified/eligible to vote for the category */
-        require(allowedVoters[_category][stakeholders[msg.sender].role]==true,"You are not Qualified to vote for this category ");
+        /** @notice check that the voter/voter is qualified/eligible to vote for the category */
+        require(allowedVoters[_category][voters[msg.sender].role]==true,"You are not Qualified to vote for this category ");
         
         /** @notice require that the session for voting is active */
         require(activeElections[_category].VotingStarted ==true,"Voting has not commmenced for this Category");
@@ -458,13 +448,13 @@ contract TruElect {
         require(votedForCategory[Category[_category]][msg.sender]== false,"Cannot vote twice for a category..");
 
         /** @notice check that balance of voter is greater than zero.. 1 token per votes */
-        require(tetoken.balanceOf(msg.sender) >1*1e18,"YouR balance is currently not sufficient to vote. Not a stakeholder");
+        require(tetoken.balanceOf(msg.sender) >1*1e18,"YouR balance is currently not sufficient to vote. Not a voter");
       
       /// @notice check that a candidate is valid for a vote in a category
         require(candidates[_candidateID].category == Category[_category],"Candidate is not Registered for this Office!");
         
         /** @notice ensure that there are no duplicate votes recorded for a candidates category. */
-        uint256 votes = votesForCategory[_candidateID][Category[_category]]+=stakeholders[msg.sender].votingPower;
+        uint256 votes = votesForCategory[_candidateID][Category[_category]]+=voters[msg.sender].votingPower;
         candidates[_candidateID].voteCount = votes;
         votedForCategory[Category[_category]][msg.sender]=true;
         
@@ -498,10 +488,10 @@ contract TruElect {
 
     /**
     * @notice compile votes for an election
-    * @dev only chairman and teacher can compile votes
+    * @dev only chairman and elector can compile votes
     * @dev function cannot be called if contract is paused
     */
-    function compileVotes(string memory _position) onlyAccess onlyWhenNotPaused public  returns (uint total, uint winnigVotes, Candidate[] memory){
+    function compileVotes(string memory _position) onlyGranted onlyWhenNotPaused public  returns (uint total, uint winnigVotes, Candidate[] memory){
         
         /** @notice require that the category voting session is over before compiling votes */
         require(activeElections[_position].VotingEnded == true,"This session is still active for voting");
@@ -553,7 +543,7 @@ contract TruElect {
     }
 
     /**
-    * @notice only the chairman and teacher can make the election results public
+    * @notice only the chairman and elector can make the election results public
     * @dev function cannot be called if contract is paused
     */
     function makeResultPublic(string memory _category) public onlyGranted onlyWhenNotPaused returns(Candidate memory,string memory) {
