@@ -9,21 +9,21 @@ pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
  contract TruElectToken is ERC20{
-    address public chairman;
+    address public electionCommHead;
     /// ------------------------------------- MAPPING ------------------------------------------ ///
     mapping(address => bool) public elector;
 
     /// ------------------------------------- MODIFIER ------------------------------------------ ///
     /** @notice modifier to restrict who can call the function */
     modifier onlyGranted() {
-        /** @notice check that sender is the chairman or elector */
-        require(msg.sender == chairman || elector[msg.sender] == true, 
-        "Access granted to only the chairman or elector");
+        /** @notice check that sender is the election committee head or elector */
+        require(msg.sender == electionCommHead || elector[msg.sender] == true, 
+        "Access granted to only the election committee head or elector");
         _;
     }
 
      constructor() ERC20("TruElectToken", "TET") {
-        chairman = msg.sender;
+        electionCommHead = msg.sender;
         _mint(msg.sender, 40 * 1e18);
     }
     
@@ -37,7 +37,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
     
     /** 
     * @notice mints specified amount of tokens to an address.
-    * @dev only the elector and the chairman can mint tokens
+    * @dev only the elector and the election committee head can mint tokens
     */
     function mint(address _to, uint256 _amount) public onlyGranted{
         _mint(_to, _amount);
