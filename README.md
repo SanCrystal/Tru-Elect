@@ -29,7 +29,7 @@
 #
 > ## Overview
 <p align="justify">
-TruElect as an app which can be used to setup an election. The major stakeholders here are the electoral board, who are involved in stetting up the election and the voters.
+TruElect as an app which can be used to setup an election. The major voters here are the electoral board, who are involved in stetting up the election and the voters.
 </p>
 
 
@@ -39,13 +39,13 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 `Deployment on a faster network`
 - Deployment on polygon for speed, gas fees & optimization.
 
-`Upload Stakeholders & mint`
+`Upload Voters & mint`
 - Batch upload voter addresses.
 - A certain amount of tokens are minted to voters during upload.
 - Ability to restrict the voting power of voters to only those who have a token.
 
 `Setup elections and compile votes`
-- Restrict the power to set up and compile votes to only the chairman and electoral board.
+- Restrict the power to set up and compile votes to only the election committee head and electoral board.
 - Ability to set up multiple elections at the same time.
 - Restrict the ability for anyone who isn't a registered voter to vote.
 - Ability for eligible voters to vote for candidates in different election categories simultaneously.
@@ -54,17 +54,17 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 - Restrict registered voters from voting multiple times for different candidates in the same category.
 - Check to prevent users from voting for a candidate that doesn't exist for that category.
 - Ability for registered voters to view history of past elections.
-- Ability for the chairman to view the election queue.
-- Restrict the start and end of a voting session to only the chairman.
+- Ability for the election committee head to view the election queue.
+- Restrict the start and end of a voting session to only the election committee head.
 - Ability to compile votes for different election categories.
-- Ability for the chairman and electors to make the election results public.
+- Ability for the election committee head and electors to make the election results public.
 - Restrict the ability of the voters to view the election results until it is made public.
 
-`Remove Chairman`
-- Ability to change the current chairman based on a consensus of above 75% vote from the board of electors.
+`Remove Election committee head`
+- Ability to change the current election committee head based on a consensus of above 75% vote from the board of electors.
 
 `Security`
-- Ability for the chairman to pause and unpause the contract for security reasons. 
+- Ability for the election committee head to pause and unpause the contract for security reasons. 
 - If there's a vulnerability or a security breach, the contract functionality can be paused so the vulnerability can't be abused until the problem has been resolved.
 
 `Test Coverage`

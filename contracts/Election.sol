@@ -1,27 +1,9 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.10;
 
-/** 
-* @dev FLOW PROCESS
-* @dev -1- Upload address of voters
-* @dev -2- Add category
-* @dev -3- Register candidates
-* @dev -4- Setup election
-* @dev -5- Start voting session
-* @dev -6- Vote 
-* @dev -7- End voting session
-* @dev -8- Compile votes
-* @dev -9- Make results public
-*/ 
-
-/**
-- validate candidate
- */
-
-
 /**
 * @author Team-SALD - Polygon Internship 22
-* @title A Voting Dapp
+* @title An Election Dapp
 */
 /**
  *@notice TruElect token interface 
@@ -30,22 +12,22 @@ pragma solidity ^0.8.10;
  interface ITruElectToken{
     /**
     * @dev balanceOf returns the number of token owned by the given address
-    * @param owner - address to fetch number of token for
-    * @return Returns the number of tokens owned
+    * @param contractOwner - address to fetch number of token for
+    * @return - returns the number of tokens owned
     */
-    function balanceOf(address owner) external view returns (uint256);
+    function balanceOf(address contractOwner) external view returns (uint256);
  }
 
 contract TruElect {
 
-    constructor(address _tokenAddr) {
-        tetoken = ITruElectToken(_tokenAddr);
+    constructor(address _tokenAddress) {
+        tetToken = ITruElectToken(_tokenAddress);
         
-        /** @notice add chairman is the deployer of the contract */
-        chairman = msg.sender;
+        /** @notice add election committee head as the deployer of the contract */
+        electionCommHead = msg.sender;
         
-        /** @notice add chairman as a voter */
-        voters[msg.sender] = Voter("chairman", true, false, 0, 4 );
+        /** @notice add election committee head as a voter */
+        voters[msg.sender] = Voter("electionCommHead", true, false, 0, 4 );
     }
 
     /// ---------------------------------------- STRUCT ------------------------------------------ ///
@@ -80,10 +62,10 @@ contract TruElect {
 
     /// ---------------------------------------- VARIABLES ------------------------------------- ///
     /** @notice state variable for tokens */
-    ITruElectToken public tetoken;
+    ITruElectToken public tetToken;
 
-    /** @notice declare state variable chairman */
-    address public chairman;
+    /** @notice declare state variable election committee head */
+    address public electionCommHead;
 
     /** @notice declare state variable candidatesCount */
     uint public candidatesCount = 0;
@@ -117,7 +99,7 @@ contract TruElect {
     mapping(uint => Candidate) public candidates;
 
     /** voted for a category */
-    mapping(uint256=>mapping(address=>bool)) public votedForCategory;
+    mapping(uint256 => mapping(address => bool)) public votedForCategory;
     
     /** @notice mapping to check votes for a specific category */
     mapping(uint256=>mapping(uint256=>uint256)) public votesForCategory;
@@ -158,12 +140,12 @@ contract TruElect {
         _;
     }
     
-    /// @notice modifier to check that only the chairman or electors can call a function
+    /// @notice modifier to check that only the election committee head or electors can call a function
     modifier onlyGranted() {
 
-        /// @notice check that sender is the chairman
-        require ((msg.sender == chairman) || compareStrings(voters[msg.sender].role,"electors"), 
-        "Access granted to only the chairman or electors");
+        /// @notice check that sender is the election committee head
+        require ((msg.sender == electionCommHead) || compareStrings(voters[msg.sender].role,"electors"), 
+        "Access granted to only the election committee head or electors");
         _;
     }
  
@@ -182,12 +164,12 @@ contract TruElect {
         _;
     }
 
-    /** @notice modifier to check that only the chairman can call a function */
-    modifier onlyChairman() {
+    /** @notice modifier to check that only the election committee head can call a function */
+    modifier onlyElectionCommHead() {
 
-        /** @notice check that sender is the chairman */
-        require(msg.sender == chairman, 
-        "Access granted to only the chairman");
+        /** @notice check that sender is the election committee head */
+        require(msg.sender == electionCommHead, 
+        "Access granted to only the election committee head");
         _;
     }
 
@@ -199,7 +181,7 @@ contract TruElect {
     ); 
 
     /// @notice emit when role is appointed
-    event ChangeChairman (address adder, address newChairman);   
+    event ChangeElectionCommHead (address adder, address newElectionCommHead);   
      
     /** @notice emit when candidate has been registered */
     event CandidateRegisteredEvent( 
@@ -258,33 +240,31 @@ contract TruElect {
     * @dev can be called by only the electors
     * @dev function cannot be called when contract is paused
     */
-    function changeChairman(address _stakeHolder) onlyElector onlyWhenNotPaused public{
-        require(voters[_stakeHolder].isRegistered ==true,"Can't assign a role of chairman to a non voter.");
+    function changeElectionCommHead(address _voter) onlyElector onlyWhenNotPaused public{
+        require(voters[_voter].isRegistered ==true,"Can't assign a role of election committee head to a non voter.");
         uint256 consensusCheckpoint = 75*electorsCount;
         require(consensus.length*100 > consensusCheckpoint,"Requires Greater than 75% consent of electors to approve!");
         
-        /** @notice change chairman role */
-        voters[_stakeHolder].role = "chairman";
-        voters[chairman].role = "electors";
-        voters[chairman].votingPower= 3;
-        voters[_stakeHolder].votingPower= 4;
-        chairman = _stakeHolder;
+        /** @notice change election committee head role */
+        voters[_voter].role = "electionCommHead";
+        voters[electionCommHead].role = "electors";
+        electionCommHead = _voter;
 
         address[] memory _consensus = consensus;
         for(uint256 i;i<_consensus.length;i++){
             hasConsented[_consensus[i]]=false;
         }
         delete consensus;
-        /** @notice emit event of new chairman */
-        emit ChangeChairman(msg.sender, _stakeHolder);
+        /** @notice emit event of new election committee head */
+        emit ChangeElectionCommHead(msg.sender, _voter);
     } 
 
     /**
     * @notice upload csv file of voters
-    * @dev only chairman and elector can upload csv file of voters
+    * @dev only election committee head and elector can upload csv file of voters
     * @dev function cannot be called if contract is paused
     */
-    function uploadStakeHolder(string memory _role,uint256 votingPower,address[] calldata _address) onlyGranted onlyWhenNotPaused  external {
+    function uploadVoter(string memory _role,uint256 votingPower,address[] calldata _address) onlyGranted onlyWhenNotPaused  external {
         /// @notice loop through the list of voters and upload
         require(
             _address.length >0,
@@ -302,7 +282,7 @@ contract TruElect {
     
     /** 
     * @notice register candidate for election
-    * @dev only chairman and elector can register candidates for election
+    * @dev only election committee head and elector can register candidates for election
     * @dev function cannot be called if contract is paused
     */
     function registerCandidate(string memory candidateName, string memory _category) 
@@ -322,7 +302,7 @@ contract TruElect {
 
     /** 
     * @notice add categories of offices for election
-    * @dev only chairman and elector can add categories for election
+    * @dev only election committee head and elector can add categories for election
     * @dev function cannot be called if contract is paused
     */
     function addCategories(string memory _category) onlyGranted onlyWhenNotPaused public returns(string memory ){
@@ -352,7 +332,7 @@ contract TruElect {
     /**
     * @notice setup election
     * @dev takes in category and an array of candidates
-    * @dev only chairman and elector can setup election
+    * @dev only election committee head and elector can setup election
     * @dev function cannot be called if contract is paused
     */
     function setUpElection (string memory _category,uint256[] memory _candidateID,string[] memory _allowedVoters) public onlyGranted onlyWhenNotPaused returns(bool){
@@ -380,20 +360,20 @@ contract TruElect {
 
     /** 
     * @notice clear election queue 
-    * @dev only chairman can clear the election queue
+    * @dev only election committee head can clear the election queue
     * @dev function cannot be called if contract is paused    
     */
-    function clearElectionQueue() public onlyChairman onlyWhenNotPaused{
+    function clearElectionQueue() public onlyElectionCommHead onlyWhenNotPaused{
         delete activeElectionArrays;
     }
     
     /** 
     * @notice start voting session for a caqtegory
-    * @dev only chairman can start voting session
+    * @dev only election committee head can start voting session
     * @dev function cannot be called if contract is paused    
     */
     function startVotingSession(string memory _category) 
-        public onlyChairman onlyWhenNotPaused {
+        public onlyElectionCommHead onlyWhenNotPaused {
         require(Category[_category] > 0, "no such category exist");
         
         /** @notice add election category to active elections */
@@ -412,11 +392,11 @@ contract TruElect {
     
     /** 
     * @notice end voting session for a category
-    * @dev only chairman can end the voting session
+    * @dev only election committee head can end the voting session
     * @dev function cannot be called if contract is paused
     */
     function endVotingSession(string memory _category) 
-        public onlyChairman onlyWhenNotPaused {
+        public onlyElectionCommHead onlyWhenNotPaused {
         activeElections[_category].VotingEnded = true;
         
         /**@notice update the activeElectionArrays */ 
@@ -448,7 +428,7 @@ contract TruElect {
         require(votedForCategory[Category[_category]][msg.sender]== false,"Cannot vote twice for a category..");
 
         /** @notice check that balance of voter is greater than zero.. 1 token per votes */
-        require(tetoken.balanceOf(msg.sender) >1*1e18,"YouR balance is currently not sufficient to vote. Not a voter");
+        require(tetToken.balanceOf(msg.sender) >1*1e18,"YouR balance is currently not sufficient to vote. Not a voter");
       
       /// @notice check that a candidate is valid for a vote in a category
         require(candidates[_candidateID].category == Category[_category],"Candidate is not Registered for this Office!");
@@ -488,7 +468,7 @@ contract TruElect {
 
     /**
     * @notice compile votes for an election
-    * @dev only chairman and elector can compile votes
+    * @dev only election committee head and elector can compile votes
     * @dev function cannot be called if contract is paused
     */
     function compileVotes(string memory _position) onlyGranted onlyWhenNotPaused public  returns (uint total, uint winnigVotes, Candidate[] memory){
@@ -536,14 +516,14 @@ contract TruElect {
  
     /**
     * @notice setpPaused() is used to pause all functions in the contract in case of an emergency
-    * @dev only chairman can pause the contract
+    * @dev only election committee head can pause the contract
     */
-    function setPaused(bool _value) public onlyChairman {
+    function setPaused(bool _value) public onlyElectionCommHead {
         _paused = _value;
     }
 
     /**
-    * @notice only the chairman and elector can make the election results public
+    * @notice only the election committee head and elector can make the election results public
     * @dev function cannot be called if contract is paused
     */
     function makeResultPublic(string memory _category) public onlyGranted onlyWhenNotPaused returns(Candidate memory,string memory) {
