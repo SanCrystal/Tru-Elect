@@ -1,0 +1,224 @@
+footer{
+    background-image: linear-gradient( #161418 10%, var(--main-bg-2) 100%);
+    padding-top: 8rem;
+    box-shadow: 0 -1rem 1.5rem hsla(var(--primary-hue),68%,42% ,20%);
+    transition: var(--transition);
+    position:relative;
+} 
+.footer__container{
+    display: grid;
+    grid-template-columns: 40% 25% 25%;
+    gap:2rem;
+    padding-bottom: 4rem;
+    /* overflow-x: hidden; */
+}
+.footer__socials{
+    display: flex;
+    gap:.1rem;
+    width: fit-content;
+    margin:0 0 4rem;
+}
+.social__container{
+    display:flex;
+    flex-direction: column;
+    gap:1.5rem;
+    z-index: 1;
+}
+.footer__nav{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1;
+}
+.footer__nav .nav__menu{
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    font-size: 1.1rem;
+
+}
+.footer__nav .nav__menu a{
+    color: white;
+
+}
+
+
+.footer__socials a{
+    font-size: 2.5rem;
+    color: white;
+    padding: 0.5rem;
+}
+.footer__socials a:hover{
+    opacity: 0.7;
+    transform: translateY(-0.5rem);
+}
+
+.social__logo {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--main-bg-2);
+    position: relative;
+}
+.social__logo img {
+    position: absolute;
+    top:-.4rem;
+}
+
+.underlay-background{
+    position:absolute;
+    width: 13rem;
+    height: 2rem;
+    background-image: linear-gradient(-45deg,
+    #FB35FF 2%,
+    #9747FF  71.6%,
+    rgba(69, 244, 255, 0.47) 100%);
+    border-radius: 50%;;
+    border-radius: 50%;
+    left: 55%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  
+
+}
+.underlay-background:before{
+    content: "";
+    position: absolute;
+    top: -10%;
+    left:0%;
+    background: var(--main-bg-2);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.underlay-background:nth-child(1){
+    top: 24%;
+    left: 50%;
+    /* width: 5%; */
+    
+}
+.underlay-background:nth-child(2){
+    top: 35%;
+    left: 50%;
+    /* width: 15%; */
+}
+.underlay-background:nth-child(3){
+    top: 45%;
+    left: 50%;
+    /* width: 20%; */
+}
+.underlay-background:nth-child(4){
+    top: 53.5%;
+    left: 50%;
+    /* width: 25%; */
+}
+.underlay-background:nth-child(5){
+    top: 63%;
+    left: 50%;
+    /* width: 35%; */
+}
+.underlay-background:nth-child(6){
+    top: 72%;
+    left: 50%;
+    /* width: 35%; */
+}
+
+
+/* Media queries (Tablet) */
+@media only screen and (max-width: 1024px) {
+    .footer__container{
+        overflow-x: hidden;
+    }
+    footer .nav__menu{
+        display: flex;
+        flex-direction: column;
+        padding-left: 2rem;
+        /* align-items: center; */
+        gap: 1rem;
+    }
+    .underlay-background{
+        width: 11rem;
+    }
+    .underlay-background:nth-child(1){
+        top: 24%;
+        left: 55%;
+        /* width: 5%; */
+        
+    }
+    .underlay-background:nth-child(2){
+        top: 35%;
+        left: 55%;
+        /* width: 15%; */
+    }
+    .underlay-background:nth-child(3){
+        top: 45%;
+        left: 55%;
+        /* width: 20%; */
+    }
+    .underlay-background:nth-child(4){
+        top: 53.5%;
+        left: 55%;
+        /* width: 25%; */
+    }
+    .underlay-background:nth-child(5){
+        top: 63%;
+        left: 55%;
+        /* width: 35%; */
+    }
+    .underlay-background:nth-child(6){
+        top: 72%;
+        left: 55%;
+        /* width: 35%; */
+    }
+    
+}
+@media only screen and (max-width: 600px) {
+    footer .nav__menu{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .footer__container{
+        grid-template-columns: 1fr;
+        place-items: center;
+    }
+    .underlay-background{
+        width: 11rem;
+    }
+    .underlay-background:nth-child(1){
+        top: 44%;
+        left: 55%;
+        /* width: 5%; */
+        
+    }
+    .underlay-background:nth-child(2){
+        top: 49.7%;
+        left: 55%;
+        /* width: 15%; */
+    }
+    .underlay-background:nth-child(3){
+        top: 53.8%;
+        left: 55%;
+        /* width: 20%; */
+    }
+    .underlay-background:nth-child(4){
+        top: 57.8%;
+        left: 55%;
+        /* width: 25%; */
+    }
+    .underlay-background:nth-child(5){
+        top: 62%;
+        left: 55%;
+        /* width: 35%; */
+    }
+    .underlay-background:nth-child(6){
+        top: 66%;
+        left: 55%;
+        /* width: 35%; */
+    }
+    .footer__nav{
+        margin-top: 4rem;
+    }
+}

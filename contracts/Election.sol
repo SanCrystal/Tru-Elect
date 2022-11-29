@@ -40,7 +40,7 @@ contract TruElect {
         chairman = msg.sender;
         
         /** @notice add chairman as a stakeholder */
-        stakeholders[msg.sender] = Stakeholder("chairman", true, false, 0, 4 );
+        stakeholders[msg.sender] = Stakeholder("chairman", true, false, 0 );
     }
 
 
@@ -51,7 +51,6 @@ contract TruElect {
         bool isRegistered;
         bool hasVoted;  
         uint votedCandidateId;
-        uint256 votingPower;   
     }
 
     /** @notice structure for candidates */
@@ -271,8 +270,6 @@ contract TruElect {
         /** @notice change chairman role */
         stakeholders[_stakeHolder].role = "chairman";
         stakeholders[chairman].role = "electors";
-        stakeholders[chairman].votingPower= 3;
-        stakeholders[_stakeHolder].votingPower= 4;
         chairman = _stakeHolder;
         address[] memory _consensus = consensus;
         for(uint256 i;i<_consensus.length;i++){
@@ -290,7 +287,7 @@ contract TruElect {
     * @dev only chairman and teacher can upload csv file of stakeholders
     * @dev function cannot be called if contract is paused
     */
-    function uploadStakeHolder(string memory _role,uint256 votingPower,address[] calldata _address) onlyAccess onlyWhenNotPaused  external {
+    function uploadStakeHolder(string memory _role,address[] calldata _address) onlyAccess onlyWhenNotPaused  external {
         
         /// @notice loop through the list of voters and upload
         require(

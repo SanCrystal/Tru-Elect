@@ -1,0 +1,149 @@
+nav{
+    width: 100vw;
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    background: var(--color-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    box-shadow: 0 1rem 1.5rem hsla(var(--primary-hue),68%,42%,20%);
+    transition: var(--transition);
+}
+
+.nav__container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav__logo{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: black;
+}
+.nav__logo img{
+    aspect-ratio: 1/1;
+}
+.nav__menu{
+    display:flex;
+    gap:3.5rem;
+}
+#theme__icon,.nav__icon,.nav__close{
+    background: transparent;
+    color:white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.nav__icon,.nav__close{
+    font-size: 1.5rem;
+}
+.nav__icon,.nav__close{
+    display: none;
+}
+
+.connect{
+    display: flex;
+    gap:1rem;
+}
+
+/* theme settings for color */
+.bg-2.color-1 .nav__container .nav__menu li a,
+.bg-2.color-3 .nav__container .nav__menu li a,
+.bg-2.color-4 .nav__container .nav__menu li a,
+.bg-2.color-5 .nav__container .nav__menu li a{
+    color: white !important;
+}
+
+/* Hide nav on tablets and phones */
+@media screen and (max-width: 1024px){
+    .nav__menu{
+        display: none;
+    }
+    .connect{
+        display: none;
+    }
+   .nav__menu-sm,.connect-sm{
+    display: block;
+    position:absolute;
+    right: 0%;
+    top:100%;
+    background: var(--main-bg-2);
+    opacity: .9;
+    width: 30%;
+    animation: nav__animation 500ms ease-in forwards;
+    transition: var(--transition);
+   }
+   .nav__menu-sm li,.connect li{
+    padding: 1rem 2rem;
+   }
+   #theme__icon{
+    margin-left: auto;
+    margin-right: 2rem;
+   }
+   .nav__icon,.nav__close{
+    display: block;
+    
+   }
+   .connect{
+    gap:.3rem;
+    font-size: .8rem;
+    top:450%;
+   }
+   .nav__menu-sm.hide{
+    animation: nav__animation-hide 500ms ease-in forwards;
+    transition: var(--transition);
+   }
+  
+   @keyframes nav__animation {
+    from{
+        opacity: 0;
+        width: 0;
+    }
+    to{
+        opacity: 1;
+        width: 30%;
+    }
+   }
+   @keyframes nav__animation-hide {
+    from{
+        opacity: 1;
+        width: 30%;
+    }
+    to{
+        opacity: 0;
+        width: 0;
+    }
+   }
+    
+}
+
+@media screen and (max-width: 600px){
+    .nav__menu-sm,.connect-sm{
+        width: 60%;
+    }
+    @keyframes nav__animation {
+        from{
+            opacity: 0;
+            width: 0;
+        }
+        to{
+            opacity: 1;
+            width: 60%;
+        }
+       }
+
+       @keyframes nav__animation-hide {
+        from{
+            opacity: 1;
+            width: 60%;
+        }
+        to{
+            opacity: 0;
+            width: 0;
+        }
+       }
+}
