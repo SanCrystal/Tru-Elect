@@ -29,7 +29,7 @@
 #
 > ## Overview
 <p align="justify">
-TruElect as an app which can be used to setup an election. The major stakeholders here are the electoral board, who are involved in stetting up the election and the voters.
+TruElect as an app which can be used to setup an election. The major voters here are the electoral board, who are involved in stetting up the election and the voters.
 </p>
 
 
@@ -39,13 +39,13 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 `Deployment on a faster network`
 - Deployment on polygon for speed, gas fees & optimization.
 
-`Upload Stakeholders & mint`
+`Upload Voters & mint`
 - Batch upload voter addresses.
 - A certain amount of tokens are minted to voters during upload.
 - Ability to restrict the voting power of voters to only those who have a token.
 
 `Setup elections and compile votes`
-- Restrict the power to set up and compile votes to only the chairman and electoral board.
+- Restrict the power to set up and compile votes to only the election committee head and electoral board.
 - Ability to set up multiple elections at the same time.
 - Restrict the ability for anyone who isn't a registered voter to vote.
 - Ability for eligible voters to vote for candidates in different election categories simultaneously.
@@ -54,17 +54,17 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 - Restrict registered voters from voting multiple times for different candidates in the same category.
 - Check to prevent users from voting for a candidate that doesn't exist for that category.
 - Ability for registered voters to view history of past elections.
-- Ability for the chairman to view the election queue.
-- Restrict the start and end of a voting session to only the chairman.
+- Ability for the election committee head to view the election queue.
+- Restrict the start and end of a voting session to only the election committee head.
 - Ability to compile votes for different election categories.
-- Ability for the chairman and electors to make the election results public.
+- Ability for the election committee head and electors to make the election results public.
 - Restrict the ability of the voters to view the election results until it is made public.
 
-`Remove Chairman`
-- Ability to change the current chairman based on a consensus of above 75% vote from the board of electors.
+`Remove Election committee head`
+- Ability to change the current election committee head based on a consensus of above 75% vote from the board of electors.
 
 `Security`
-- Ability for the chairman to pause and unpause the contract for security reasons. 
+- Ability for the election committee head to pause and unpause the contract for security reasons. 
 - If there's a vulnerability or a security breach, the contract functionality can be paused so the vulnerability can't be abused until the problem has been resolved.
 
 `Test Coverage`
@@ -88,16 +88,16 @@ TruElect as an app which can be used to setup an election. The major stakeholder
 > ## Repo Setup
 
 <p align="justify">
-To setup the repo, first fork the Team-SALD Tru-Elect repo, then clone the forked repository to create a copy on your local machine.
+To setup the repo, first fork the Team-LADS Tru-Elect repo, then clone the forked repository to create a copy on your local machine.
 </p>
 
     $ git clone https://github.com/<your-forked-repo>/Tru-Elect.git
 
 <p align="justify">
-Change directory to the cloned repo and set the Team-SALD Tru-Elect repository as the "upstream" and your forked repository as the "origin" using gitbash.
+Change directory to the cloned repo and set the Team-LADS Tru-Elect repository as the "upstream" and your forked repository as the "origin" using gitbash.
 </p>
 
-    $ git remote add upstream https://github.com/Team-SALD/Tru-Elect.git
+    $ git remote add upstream https://github.com/Team-LADS/Tru-Elect.git
 
 #
 
@@ -217,7 +217,7 @@ $ npm install
 $ npm run dev
 ```
 > ### Steps to host the live site on Vercel
-- Create an account on [vercel](https://vercel.com/) and authorize your [GitHub](https://github.com/Polygon-Team-SALD) account.
+- Create an account on [vercel](https://vercel.com/) and authorize your [GitHub](https://github.com/Polygon-Team-LADS) account.
 
 - Once you're redirected to the Dashboard, click on the drop down menu and select `Add GitHub Org or Account`.
 
@@ -225,7 +225,7 @@ $ npm run dev
 
 - Once installation is completed, return to the dashboard and click `new project`.
 
-- Select the Team-SALD organization and select the TruElect repo to import the project.
+- Select the Team-LADS organization and select the TruElect repo to import the project.
 
 - Enter the relevant details and click `Deploy`.
 
@@ -277,7 +277,7 @@ $ npx hardhat coverage --network localhost --show-stack-traces
 
 > ## Contributors
 
-This Project was created by the members of Team-SALD during the Polygon Internship.
+This Project was created by the members of Team-LADS during the Polygon Internship.
 
 ``` 
 - KordJs (Ajibadeabd@gmail.com)
@@ -287,7 +287,7 @@ This Project was created by the members of Team-SALD during the Polygon Internsh
 ```
 
 <!-- <p align="center" width="100%">
-  <img src="https://drive.google.com/uc?export=view&id=17igBfE_fikN2_NGJ0am0IaK8V1IW3Q-8" alt="Team-SALD"/>
+  <img src="https://drive.google.com/uc?export=view&id=17igBfE_fikN2_NGJ0am0IaK8V1IW3Q-8" alt="Team-LADS"/>
 </p> -->
 
 #
@@ -304,4 +304,4 @@ Before adding a pull request, please note:
 
 All **`suggestions`** are welcome!
 #
-> ##### README Created by `pauline-banye` for Team-SALD
+> ##### README Created by `pauline-banye` for Team-LADS

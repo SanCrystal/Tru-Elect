@@ -26,7 +26,7 @@ const truElectContractToken = () => {
  
 const notify = (str) => toast(str);
 
-const upload = async(_role, votingWeight,Arr) => {
+const uploadVoter = async(_role,Arr) => {
   const contract = truElectContract();
   notify("uploading stakeholders");
  try {
@@ -396,7 +396,7 @@ export const ConnectProvider = ({ children }) =>{
           endVoting,
           Compile,
           publish,
-          upload,
+          uploadVoter,
           clear,
           Voting,
           getResult,
@@ -414,3 +414,6 @@ export const ConnectProvider = ({ children }) =>{
       </ConnectContext.Provider>
     );
   };
+
+  //custom hook for contract
+  export const useContractContext = useContext(ConnectContext);
