@@ -28,10 +28,10 @@ const notify = (str) => toast(str);
 
 const uploadVoter = async(_role,Arr) => {
   const contract = truElectContract();
-  notify("uploading stakeholders");
+  notify("uploading Voter");
  try {
-   const result =await contract.uploadStakeHolder(_role, votingWeight, Arr, {gasLimit:600000});
-   notify("stakeholders, uploaded");
+   const result =await contract.uploadVoter(_role, votingWeight, Arr, {gasLimit:600000});
+   notify("Voters, uploaded");
   return result
   }
  catch(error){
@@ -58,7 +58,7 @@ const mint = async(role, amount, Arr) => {
   const contract = truElectContractToken();
   notify("minting...");
  try {
-   const result =await contract.mintToStakeholder(role, amount, Arr, {gasLimit:300000});
+   const result =await contract.mintToVoter(Arr, {gasLimit:300000});
    notify("minting, successful");
   return result
   }
@@ -72,7 +72,7 @@ const changeTokenChairman = async(addr) => {
   const contract = truElectContractToken();
   notify("changing chairman in token...");
  try {
-   const result =await contract.changeChairman(addr);
+   const result =await contract.changeElectionCommHead(addr);
    notify("changed token chairman");
   return result
   }
@@ -183,13 +183,13 @@ const AddCategory = async(_category) => {
 }
 const updateChairman = async(addr) => {
   const contract = truElectContract();
-  notify("changing chairman in zurischool...");
+  notify("changing Electorial body Chairman...");
  try {
-   const result =await contract.changeChairman(addr);
+   const result =await contract.changeElectionCommHead(addr);
    if(result){
     await changeTokenChairman(addr)
   }
-   notify("changing chairman in zurischool...");
+   notify("changing Electorial body Chairman..");
 
   return result
   }
